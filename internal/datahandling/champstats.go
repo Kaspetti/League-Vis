@@ -25,7 +25,7 @@ type BotlaneData struct {
 }
 
 
-func ImportData(path string) (BotlaneData, error) {
+func ImportData(path string) ([]BotlaneData, error) {
     f, err := os.Open(path)
     if err != nil {
         return nil, err
@@ -38,9 +38,9 @@ func ImportData(path string) (BotlaneData, error) {
         return nil, err
     }
 
-    botlaneData := make([]riotapi.BotlaneData, len(data))
+    botlaneData := make([]BotlaneData, len(data))
     for i, line := range data {
-        bd := riotapi.BotlaneData{
+        bd := BotlaneData{
             MatchId: line[0],
             BottomBlue: line[1],
             UtilityBlue: line[2],
