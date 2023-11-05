@@ -19,9 +19,15 @@ var tpl = template.Must(template.ParseFiles("pages/index.html"))
 type Options struct {
     Title string
     TotalPlayed float64
+    Green string
+    White string
+    Red string
     Data []Data 
 }
 
+const (
+    SATURATION = 0.8
+)
 
 type Data struct {
     Name string         `json:"name"`
@@ -45,7 +51,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
             Name: name,
             Value: []float64{stats.Played, stats.Winrate},
             ItemStyle: ItemStyle{
-                Color: interpolateColor(stats.Winrate, 45, 50, 55, 0.8),
+                Color: interpolateColor(stats.Winrate, 45, 50, 55, SATURATION),
             },
         }
 
@@ -56,6 +62,9 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
     options := Options{
         Title: fmt.Sprintf("%s Synergies", champ),
         TotalPlayed: totalPlayed,
+        Green: interpolateColor(55, 45, 50, 55, SATURATION),
+        White: interpolateColor(50, 45, 50, 55, SATURATION),
+        Red: interpolateColor(45, 45, 50, 55, SATURATION),
         Data: data,
     }
 

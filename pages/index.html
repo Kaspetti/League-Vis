@@ -34,12 +34,26 @@
                         ].join('');
                     },
                 },
+                visualMap: {
+                    orient: "horizontal",
+                    left: 'center',
+                    min: 45,
+                    max: 55,
+                    text: ["55%<", "<45%"],
+                    inRange: {
+                        color: [{{ .Red }}, {{ .White }}, {{ .Green }}],
+                    },
+                },
+                controller: false,
                 series: [{
                     name: "All",
                     type: "treemap",
                     itemStyle: {
                         borderColor: "black",
                         borderWidth: 1,
+                    },
+                    breadcrumb: {
+                        show: false,
                     },
                     data: {{ .Data }},
                 }],
