@@ -21,8 +21,21 @@
                         fontSize: "35",
                     },
                 },
+                tooltip: {
+                    formatter: function (info) {
+                        var value = info.value;
+                        var winrate = value[1];
+                        winrate = winrate.toFixed(2);
+
+                        return [
+                            '<div class="tooltip-title">' + echarts.format.encodeHTML(info.name) + '</div>',
+                            'Matches Analyzed: ' + value[0] + '<br>',
+                            'Winrate: ' + winrate + '<br>',
+                        ].join('');
+                    },
+                },
                 series: [{
-                    name: "test",
+                    name: "All",
                     type: "treemap",
                     itemStyle: {
                         borderColor: "black",

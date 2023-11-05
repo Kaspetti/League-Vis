@@ -25,7 +25,7 @@ type Options struct {
 
 type Data struct {
     Name string         `json:"name"`
-    Value float64           `json:"value"`
+    Value []float64           `json:"value"`
     ItemStyle ItemStyle `json:"itemStyle"`
 }
 
@@ -43,7 +43,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
     for name, stats := range champStats {
         d := Data{
             Name: name,
-            Value: stats.Played,
+            Value: []float64{stats.Played, stats.Winrate},
             ItemStyle: ItemStyle{
                 Color: interpolateColor(stats.Winrate, 45, 50, 55, 0.8),
             },
