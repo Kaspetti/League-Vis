@@ -28,5 +28,7 @@ func RunServer(ip, port string) {
     mux.HandleFunc("/", indexHandler)
     mux.HandleFunc("/champions/", championPageHandler)
 
-    http.ListenAndServe(fmt.Sprintf("%s:%s", ip, port), mux)
+    if err := http.ListenAndServe(fmt.Sprintf("%s:%s", ip, port), mux); err != nil {
+        log.Fatalln(err)
+    }
 }
