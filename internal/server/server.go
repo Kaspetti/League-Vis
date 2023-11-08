@@ -12,7 +12,7 @@ import (
 var BotlaneData []datahandling.BotlaneData
 
 
-func RunServer(port int) {
+func RunServer(ip, port string) {
     var err error
     BotlaneData, err = datahandling.ImportData("botlanes.csv")
     if err != nil {
@@ -28,5 +28,5 @@ func RunServer(port int) {
     mux.HandleFunc("/", indexHandler)
     mux.HandleFunc("/champions/", championPageHandler)
 
-    http.ListenAndServe(fmt.Sprintf(":%d", port), mux)
+    http.ListenAndServe(fmt.Sprintf("%s:%s", ip, port), mux)
 }
