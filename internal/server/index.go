@@ -8,14 +8,14 @@ import (
 )
 
 
-var indexTemplate = template.Must(template.ParseFiles("pages/index.html"))
+var indexTpl = template.Must(template.ParseFiles("pages/index.html"))
 
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
     type Options struct{}
 
     buf := &bytes.Buffer{}
-    err := championPageTpl.Execute(buf, Options{})
+    err := indexTpl.Execute(buf, Options{})
     if err != nil {
         log.Fatal(err)
     }
