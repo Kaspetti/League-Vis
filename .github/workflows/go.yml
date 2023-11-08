@@ -38,7 +38,8 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          cd /home/debaian/Documents/League-Vis
+          cd /home/leaguedeploy/League-Vis
           git pull
           go build -o bin/main cmd/League-Vis/main.go
-          sudo systemctl restart yourapp.service
+          sudo setcap 'cap_net_bind_service=+ep' /home/leaguedeploy/League-Vis/bin/main
+          sudo systemctl restart leaguevisserver.service
