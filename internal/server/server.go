@@ -26,6 +26,7 @@ func RunServer(port int) {
 
     mux.Handle("/assets/", http.StripPrefix("/assets/", fs))
     mux.HandleFunc("/", indexHandler)
+    mux.HandleFunc("/champions/", championPageHandler)
 
     http.ListenAndServe(fmt.Sprintf(":%d", port), mux)
 }

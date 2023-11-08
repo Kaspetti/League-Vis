@@ -3,63 +3,11 @@
     <head>
         <meta charset="UTF-8">
         <title>INF358</title>
-        <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
     </head>
 
     <body>
-        <div id="main" style="width: 1280px; height: 720px; margin: auto;"></div>
-
-        <script type="text/javascript">
-            var chart = echarts.init(document.getElementById("main"));
-
-            var options = {
-                title: {
-                    left: "center",
-                    text: {{ .Title }},
-                    subtext: "{{ .TotalPlayed }} analyzed games",
-                    textStyle: {
-                        fontSize: "35",
-                    },
-                },
-                tooltip: {
-                    formatter: function (info) {
-                        var value = info.value;
-                        var winrate = value[1];
-                        winrate = winrate.toFixed(2);
-
-                        return [
-                            '<div class="tooltip-title">' + echarts.format.encodeHTML(info.name) + '</div>',
-                            'Matches Analyzed: ' + value[0] + '<br>',
-                            'Winrate: ' + winrate + '<br>',
-                        ].join('');
-                    },
-                },
-                visualMap: {
-                    orient: "horizontal",
-                    left: 'center',
-                    min: 45,
-                    max: 55,
-                    text: ["55%<", "<45%"],
-                    inRange: {
-                        color: [{{ .Red }}, {{ .White }}, {{ .Green }}],
-                    },
-                },
-                controller: false,
-                series: [{
-                    name: "All",
-                    type: "treemap",
-                    itemStyle: {
-                        borderColor: "black",
-                        borderWidth: 1,
-                    },
-                    breadcrumb: {
-                        show: false,
-                    },
-                    data: {{ .Data }},
-                }],
-            };
-
-            chart.setOption(options);
-        </script>
+        <input type="text" id="champSearch">
+        <button type="submit" onclick="searchChampion()">Submit</button>
+        <script src="/assets/indexPage.js"></script>
     </body>
 </html>

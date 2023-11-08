@@ -1,75 +1,21 @@
 package server
 
 import (
-	"bytes"
-	"fmt"
 	"html/template"
-	"log"
-	"math"
 	"net/http"
-	"os"
-
-	"github.com/Kaspetti/League-Vis/internal/datahandling"
+    "bytes"
+    "log"
 )
 
 
-var tpl = template.Must(template.ParseFiles("pages/index.html"))
-
-
-type Options struct {
-    Title string
-    TotalPlayed float64
-    Green string
-    White string
-    Red string
-    Data []Data 
-}
-
-const (
-    SATURATION = 0.8
-)
-
-type Data struct {
-    Name string         `json:"name"`
-    Value []float64           `json:"value"`
-    ItemStyle ItemStyle `json:"itemStyle"`
-}
-
-type ItemStyle struct {
-    Color string        `json:"color"`
-}
+var indexTemplate = template.Must(template.ParseFiles("pages/index.html"))
 
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-    champ := os.Args[1]
-
-    totalPlayed := 0.
-    champStats := datahandling.GetChampionStats(champ, BotlaneData)
-    data := make([]Data, 0)
-    for name, stats := range champStats {
-        d := Data{
-            Name: name,
-            Value: []float64{stats.Played, stats.Winrate},
-            ItemStyle: ItemStyle{
-                Color: interpolateColor(stats.Winrate, 45, 50, 55, SATURATION),
-            },
-        }
-
-        totalPlayed += stats.Played
-        data = append(data, d)
-    }
-
-    options := Options{
-        Title: fmt.Sprintf("%s Synergies", champ),
-        TotalPlayed: totalPlayed,
-        Green: interpolateColor(55, 45, 50, 55, SATURATION),
-        White: interpolateColor(50, 45, 50, 55, SATURATION),
-        Red: interpolateColor(45, 45, 50, 55, SATURATION),
-        Data: data,
-    }
+    type Options struct{}
 
     buf := &bytes.Buffer{}
-    err := tpl.Execute(buf, options)
+    err := championPageTpl.Execute(buf, Options{})
     if err != nil {
         log.Fatal(err)
     }
@@ -77,37 +23,3 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
     buf.WriteTo(w)
 }
 
-
-func interpolateColor(value, min, mid, max, brightness float64) string {
-	// Ensure value is within the range
-	if value < min {
-		value = min
-	} else if value > max {
-		value = max
-	}
-
-	// Define the color components for red, white/grey, and green
-	redColor := 255.0
-	greenColor := 255.0
-	blueColor := 255.0 // White if 255, grey if less (e.g., 220 for light grey)
-
-	var red, green, blue float64
-
-	if value < mid {
-		// Interpolate from red to white/grey
-		normalized := (value - min) / (mid - min)
-		red = redColor
-		green = normalized * greenColor
-		blue = normalized * blueColor
-	} else {
-		// Interpolate from white/grey to green
-		normalized := (value - mid) / (max - mid)
-		red = (1 - normalized) * redColor
-		green = greenColor
-		blue = (1 - normalized) * blueColor
-	}
-
-	// Convert to hex color
-	hex := fmt.Sprintf("#%02X%02X%02X", int(math.Round(red * brightness)), int(math.Round(green * brightness)), int(math.Round(blue * brightness)))
-	return hex
-}

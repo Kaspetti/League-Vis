@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"os"
 	"strconv"
+	"strings"
 )
 
 
@@ -42,10 +43,10 @@ func ImportData(path string) ([]BotlaneData, error) {
     for i, line := range data {
         bd := BotlaneData{
             MatchId: line[0],
-            BottomBlue: line[1],
-            UtilityBlue: line[2],
-            BottomRed: line[3],
-            UtilityRed: line[4],
+            BottomBlue: strings.ToLower(line[1]),
+            UtilityBlue: strings.ToLower(line[2]),
+            BottomRed: strings.ToLower(line[3]),
+            UtilityRed: strings.ToLower(line[4]),
         }
         winningTeam, err := strconv.Atoi(line[5])
         if err != nil {
