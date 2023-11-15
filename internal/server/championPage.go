@@ -114,8 +114,8 @@ func interpolateColor(value, min, mid, max, brightness float64) string {
 		// Interpolate from white/grey to green
 		normalized := (value - mid) / (max - mid)
 		red = (1 - normalized) * redColor
-		green = greenColor
-		blue = (1 - normalized) * blueColor
+		green = (1 - normalized) * greenColor
+		blue = blueColor
 	}
 
 	// Convert to hex color
