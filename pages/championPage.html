@@ -41,7 +41,7 @@
                     left: 'center',
                     min: 40,
                     max: 60,
-                    text: ["60%<", "<40%"],
+                    text: ["> 60", "< 40"],
                     inRange: {
                         color: [{{ .Red }}, {{ .White }}, {{ .Green }}],
                     },
@@ -56,6 +56,14 @@
                     },
                     breadcrumb: {
                         show: false,
+                    },
+                    label: {
+                        normal: {
+                            show: true,
+                            textStyle: {
+                                color: 'black',
+                            },
+                        },
                     },
                     data: {{ .Data }},
                 }],
