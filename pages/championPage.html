@@ -4,12 +4,16 @@
         <meta charset="UTF-8">
         <title>INF358</title>
         <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+        <link rel="stylesheet" href="/assets/championPageStyle.css">
     </head>
 
     <body>
-        <input type="text" id="champSearch">
-        <button type="submit" onclick="searchChampion()">Submit</button>
-        <div id="main" style="width: 100vw; height: 100vh; margin: auto;"></div>
+        <div style="text-align: center;">
+            <input type="text" id="champSearch" style="padding: 6px; margin: 5px;">
+            <br>
+            <button type="submit" onclick="searchChampion()">Search</button>
+            <div id="main" style="width: 100vw; height: 90vh; margin: auto;"></div>
+        </div>
 
         <script type="text/javascript">
             var chart = echarts.init(document.getElementById("main"));
@@ -21,6 +25,10 @@
                     subtext: "{{ .TotalPlayed }} analyzed games",
                     textStyle: {
                         fontSize: "35",
+                        color: "white",
+                    },
+                    subtextStyle: {
+                        color: "white",
                     },
                 },
                 tooltip: {
@@ -70,6 +78,10 @@
             };
 
             chart.setOption(options);
+
+            window.onresize = function() {
+                chart.resize();
+            };
         </script>
         <script src="/assets/championPage.js"></script>
     </body>
