@@ -1,68 +1,57 @@
 package server
 
 import (
-	"bytes"
 	"fmt"
-	"html/template"
-	"log"
 	"math"
 	"net/http"
 	"strings"
 
 	"github.com/Kaspetti/League-Vis/internal/datahandling"
+	"github.com/gin-gonic/gin"
 )
 
-
-type Options struct {
-    Title string
-    TotalPlayed float64
-    Green string
-    White string
-    Red string
-    Data []Data 
-}
 
 const (
     SATURATION = 0.8
 )
 
+
+type Options struct {
+    Champion string         `json:"champion"`
+    TotalPlayed float64     `json:"totalPlayed"`
+    WinColor string         `json:"winColor"`
+    NeutralColor string     `json:"neutralColor"`
+    LoseColor string        `json:"loseColor"`
+    Data []Data             `json:"data"` 
+}
+
+
 type Data struct {
     Name string         `json:"name"`
-    Value []float64           `json:"value"`
+    Value []float64     `json:"value"`
     ItemStyle ItemStyle `json:"itemStyle"`
     Label Label         `json:"label"`
 }
 
+
 type ItemStyle struct {
     Color string        `json:"color"`
 }
+
 
 type Label struct {
     Show bool           `json:"show"`
     Color string        `json:"color"`
 }
 
-var championPageTpl = template.Must(template.ParseFiles("pages/championPage.html"))
 
-
-func championPageHandler(w http.ResponseWriter, r *http.Request) {
-    pathSegments := strings.Split(r.URL.Path, "/")
-    if len(pathSegments) < 3 || pathSegments[2] == "" {
-        http.NotFound(w, r)
-        return
-    }
-    champion := pathSegments[2]
+func GetChampionSupportAlly(c *gin.Context) {
+    champion := c.Param("champion")
+    championStats := datahandling.GetChampionStats(champion, BotlaneData)
 
     totalPlayed := 0.
-    champStats := datahandling.GetChampionStats(champion, BotlaneData)
-
-    if len(champStats) == 0 {
-        http.NotFound(w, r)
-        return
-    }
-
     data := make([]Data, 0)
-    for name, stats := range champStats {
+    for name, stats := range championStats {
         var color string
         if stats.Winrate >= 55 || stats.Winrate <= 45 {
             color = "#ffffff"
@@ -87,21 +76,14 @@ func championPageHandler(w http.ResponseWriter, r *http.Request) {
     }
 
     options := Options{
-        Title: fmt.Sprintf("%s Synergies", strings.Title(champion)),
+        Champion: fmt.Sprintf("%s Synergies", strings.Title(champion)),
         TotalPlayed: totalPlayed,
-        Green: interpolateColor(60, 40, 50, 60, SATURATION),
-        White: interpolateColor(50, 40, 50, 60, SATURATION),
-        Red: interpolateColor(40, 40, 50, 60, SATURATION),
+        WinColor: interpolateColor(60, 40, 50, 60, SATURATION),
+        NeutralColor: interpolateColor(50, 40, 50, 60, SATURATION),
+        LoseColor: interpolateColor(40, 40, 50, 60, SATURATION),
         Data: data,
     }
-
-    buf := &bytes.Buffer{}
-    err := championPageTpl.Execute(buf, options)
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    buf.WriteTo(w)
+    c.IndentedJSON(http.StatusOK, options)
 }
 
 

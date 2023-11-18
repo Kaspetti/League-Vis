@@ -1,11 +1,10 @@
 package server
 
 import (
-	"fmt"
 	"log"
-	"net/http"
 
 	"github.com/Kaspetti/League-Vis/internal/datahandling"
+	"github.com/gin-gonic/gin"
 )
 
 
@@ -19,16 +18,18 @@ func RunServer(ip, port string) {
         log.Fatalln(err)
     }
 
+    router := gin.Default()
 
-    fs := http.FileServer(http.Dir("assets"))
-
-    mux := http.NewServeMux()
-
-    mux.Handle("/assets/", http.StripPrefix("/assets/", fs))
-    mux.HandleFunc("/", indexHandler)
-    mux.HandleFunc("/champions/", championPageHandler)
-
-    if err := http.ListenAndServe(fmt.Sprintf("%s:%s", ip, port), mux); err != nil {
-        log.Fatalln(err)
+    api := router.Group("/api") 
+    {
+        api.GET("/champions/:champion/supports/ally", GetChampionSupportAlly)
     }
+
+    router.Static("/public", "./public")
+
+    router.NoRoute(func(c *gin.Context) {
+        c.File("./public/index.html")
+    })
+
+    router.Run(":8080")
 }
