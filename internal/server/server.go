@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/Kaspetti/League-Vis/internal/datahandling"
@@ -31,5 +32,5 @@ func RunServer(ip, port string) {
         c.File("./public/index.html")
     })
 
-    router.Run(":8080")
+    router.Run(fmt.Sprintf("%s:%s", ip, port))
 }
