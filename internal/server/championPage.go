@@ -30,12 +30,17 @@ type Data struct {
     Name string         `json:"name"`
     Value []float64           `json:"value"`
     ItemStyle ItemStyle `json:"itemStyle"`
+    Label Label         `json:"label"`
 }
 
 type ItemStyle struct {
     Color string        `json:"color"`
 }
 
+type Label struct {
+    Show bool           `json:"show"`
+    Color string        `json:"color"`
+}
 
 var championPageTpl = template.Must(template.ParseFiles("pages/championPage.html"))
 
@@ -58,9 +63,20 @@ func championPageHandler(w http.ResponseWriter, r *http.Request) {
 
     data := make([]Data, 0)
     for name, stats := range champStats {
+        var color string
+        if stats.Winrate >= 55 || stats.Winrate <= 45 {
+            color = "#ffffff"
+        } else {
+            color = "#000000"
+        }
+
         d := Data{
             Name: strings.Title(name),
             Value: []float64{stats.Played, stats.Winrate},
+            Label: Label{
+                Show: true,
+                Color: color,
+            },
             ItemStyle: ItemStyle{
                 Color: interpolateColor(stats.Winrate, 40, 50, 60, SATURATION),
             },
