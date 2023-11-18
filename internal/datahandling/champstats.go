@@ -9,10 +9,10 @@ import (
 
 
 type ChampionStats struct {
-    Played float64
-    Wins float64
-    Losses float64
-    Winrate float64
+    Played float64  `json:"played"`
+    Wins float64    `json:"wins"`
+    Losses float64  `json:"losses"`
+    Winrate float64 `json:"winrate"`
 }
 
 
