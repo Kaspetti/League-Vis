@@ -61,7 +61,7 @@ func ImportData(path string) ([]BotlaneData, error) {
 }
 
 
-func GetAdcSupportAlly(championName string, botlaneData []BotlaneData) map[string]*ChampionStats {
+func GetAdcAllySupport(championName string, botlaneData []BotlaneData) map[string]*ChampionStats {
     championStats := make(map[string]*ChampionStats)
 
     for _, bd := range botlaneData {
@@ -81,6 +81,35 @@ func GetAdcSupportAlly(championName string, botlaneData []BotlaneData) map[strin
             if stats, ok = championStats[bd.UtilityRed]; !ok {
                 stats = &ChampionStats{}
                 championStats[bd.UtilityRed] = stats
+            }
+            stats.addGame(200, bd.WinningTeam)
+        }
+    }
+
+    return championStats
+}
+
+
+func GetAdcOpponentAdc(championName string, botlaneData []BotlaneData) map[string]*ChampionStats {
+    championStats := make(map[string]*ChampionStats)
+
+    for _, bd := range botlaneData {
+        if !bd.isValid() {
+            continue
+        }
+
+        var stats *ChampionStats
+        var ok bool
+        if bd.BottomBlue == championName {
+            if stats, ok = championStats[bd.BottomRed]; !ok {
+                stats = &ChampionStats{}
+                championStats[bd.BottomRed] = stats
+            }
+            stats.addGame(100, bd.WinningTeam)
+        } else if bd.BottomRed == championName {
+            if stats, ok = championStats[bd.BottomBlue]; !ok {
+                stats = &ChampionStats{}
+                championStats[bd.BottomBlue] = stats
             }
             stats.addGame(200, bd.WinningTeam)
         }

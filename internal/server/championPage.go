@@ -45,9 +45,9 @@ type Label struct {
 }
 
 
-func GetChampionSupportAlly(c *gin.Context) {
+func GetAllySupport(c *gin.Context) {
     champion := c.Param("champion")
-    championStats := datahandling.GetAdcSupportAlly(champion, BotlaneData)
+    championStats := datahandling.GetAdcAllySupport(champion, BotlaneData)
 
     totalPlayed := 0.
     data := make([]Data, 0)
@@ -76,7 +76,49 @@ func GetChampionSupportAlly(c *gin.Context) {
     }
 
     options := Options{
-        Title: fmt.Sprintf("%s Synergies", strings.Title(champion)),
+        Title: fmt.Sprintf("%s with Support", strings.Title(champion)),
+        TotalPlayed: totalPlayed,
+        WinColor: interpolateColor(60, 40, 50, 60, SATURATION),
+        NeutralColor: interpolateColor(50, 40, 50, 60, SATURATION),
+        LoseColor: interpolateColor(40, 40, 50, 60, SATURATION),
+        Data: data,
+    }
+    c.IndentedJSON(http.StatusOK, options)
+}
+
+
+func GetOpponentADC(c *gin.Context) {
+    champion := c.Param("champion")
+    championStats := datahandling.GetAdcOpponentAdc(champion, BotlaneData)
+
+    totalPlayed := 0.
+    data := make([]Data, 0)
+    for name, stats := range championStats {
+        var color string
+        if stats.Winrate >= 55 || stats.Winrate <= 45 {
+            color = "#ffffff"
+        } else {
+            color = "#000000"
+        }
+
+        d := Data{
+            Name: strings.Title(name),
+            Value: []float64{stats.Played, stats.Winrate},
+            Label: Label{
+                Show: true,
+                Color: color,
+            },
+            ItemStyle: ItemStyle{
+                Color: interpolateColor(stats.Winrate, 40, 50, 60, SATURATION),
+            },
+        }
+
+        totalPlayed += stats.Played
+        data = append(data, d)
+    }
+
+    options := Options{
+        Title: fmt.Sprintf("%s against ADC", strings.Title(champion)),
         TotalPlayed: totalPlayed,
         WinColor: interpolateColor(60, 40, 50, 60, SATURATION),
         NeutralColor: interpolateColor(50, 40, 50, 60, SATURATION),

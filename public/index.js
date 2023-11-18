@@ -1,7 +1,17 @@
-function searchChampion() {
+function searchChampion(type) {
     var input = document.getElementById("champSearch").value.trim();
     if (input) {
-        fetch("http://localhost:8080/api/champions/" + encodeURIComponent(input.toLowerCase()) + "/supports/ally")
+        var endpoint = "";
+        switch (type) {
+            case "allySupport":
+                endpoint = "api/champions/" + encodeURIComponent(input.toLowerCase()) + "/ally/support";
+                break;
+            case "opponentAdc":
+                endpoint = "api/champions/" + encodeURIComponent(input.toLowerCase()) + "/opponent/adc";
+                break;
+        }
+
+        fetch("http://leaguevis.kaspeti.com/" + endpoint)
             .then(response => {
                 if (!response.ok) {
                     throw new Error("API response was not OK: " + response.statusText);

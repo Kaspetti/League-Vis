@@ -7,11 +7,10 @@
     </head>
     <body>
         <div style="text-align: center;">
-            <form onsubmit="event.preventDefault(); searchChampion();">
-                <input type="text" id="champSearch" style="padding: 6px; margin: 5px;">
-                <br>
-                <button type="submit">Search</button>
-            </form>
+            <input type="text" id="champSearch" style="padding: 6px; margin: 5px;">
+            <br>
+            <button type="button" onclick="searchChampion('allySupport')">Support Synergies</button>
+            <button type="button" onclick="searchChampion('opponentAdc')">ADC Counters</button>
 
             <div id="main" style="width: 100vw; height: 90vh; margin: auto;"></div>
         </div>
