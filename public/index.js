@@ -1,7 +1,7 @@
 function searchChampion() {
     var input = document.getElementById("champSearch").value.trim();
     if (input) {
-        fetch("http://remote.kaspeti.com/api/champions/" + encodeURIComponent(input.toLowerCase()) + "/supports/ally")
+        fetch("http://leaguevis.kaspeti.com/api/champions/" + encodeURIComponent(input.toLowerCase()) + "/supports/ally")
             .then(response => {
                 if (!response.ok) {
                     throw new Error("API response was not OK: " + response.statusText);
