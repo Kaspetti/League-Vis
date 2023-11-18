@@ -20,6 +20,7 @@ func RunServer(ip, port string) {
     }
 
     router := gin.Default()
+    router.SetTrustedProxies(nil)
 
     api := router.Group("/api") 
     {
