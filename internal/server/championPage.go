@@ -17,7 +17,7 @@ const (
 
 
 type Options struct {
-    Champion string         `json:"champion"`
+    Title string            `json:"title"`
     TotalPlayed float64     `json:"totalPlayed"`
     WinColor string         `json:"winColor"`
     NeutralColor string     `json:"neutralColor"`
@@ -47,7 +47,7 @@ type Label struct {
 
 func GetChampionSupportAlly(c *gin.Context) {
     champion := c.Param("champion")
-    championStats := datahandling.GetChampionStats(champion, BotlaneData)
+    championStats := datahandling.GetAdcSupportAlly(champion, BotlaneData)
 
     totalPlayed := 0.
     data := make([]Data, 0)
@@ -76,7 +76,7 @@ func GetChampionSupportAlly(c *gin.Context) {
     }
 
     options := Options{
-        Champion: fmt.Sprintf("%s Synergies", strings.Title(champion)),
+        Title: fmt.Sprintf("%s Synergies", strings.Title(champion)),
         TotalPlayed: totalPlayed,
         WinColor: interpolateColor(60, 40, 50, 60, SATURATION),
         NeutralColor: interpolateColor(50, 40, 50, 60, SATURATION),

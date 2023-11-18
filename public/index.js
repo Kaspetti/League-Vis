@@ -26,7 +26,7 @@ function initializeChart(data) {
     var options = {
         title: {
             left: "center",
-            text: data["champion"],
+            text: data["title"],
             subtext: data["totalPlayed"] + " analyzed games",
             textStyle: {
                 fontSize: "35",

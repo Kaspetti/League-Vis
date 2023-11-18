@@ -61,67 +61,52 @@ func ImportData(path string) ([]BotlaneData, error) {
 }
 
 
-func GetChampionStats(champName string, botlaneData []BotlaneData) map[string]*ChampionStats {
+func GetAdcSupportAlly(championName string, botlaneData []BotlaneData) map[string]*ChampionStats {
     championStats := make(map[string]*ChampionStats)
 
     for _, bd := range botlaneData {
-        if bd.BottomBlue == champName {
-            if stats, ok := championStats[bd.UtilityBlue]; ok {
-                stats.Played++
+        if !bd.isValid() {
+            continue
+        }
 
-                if bd.WinningTeam == 100 {
-                    stats.Wins++
-                } else {
-                    stats.Losses++
-                }
-
-                stats.Winrate = (stats.Wins * 100.0) / stats.Played
-            } else {
-                stats = &ChampionStats{
-                    Played: 1,
-                    Winrate: 1,
-                }
-
-                if bd.WinningTeam == 100 {
-                    stats.Wins = 1
-                    stats.Winrate = 100
-                } else {
-                    stats.Losses = 1
-                    stats.Winrate = 0
-                }
-
+        var stats *ChampionStats
+        var ok bool
+        if bd.BottomBlue == championName {
+            if stats, ok = championStats[bd.UtilityBlue]; !ok {
+                stats = &ChampionStats{}
                 championStats[bd.UtilityBlue] = stats
             }
-        } else if bd.BottomRed == champName {
-            if stats, ok := championStats[bd.UtilityRed]; ok {
-                stats.Played++
-
-                if bd.WinningTeam == 200 {
-                    stats.Wins++
-                } else {
-                    stats.Losses++
-                }
-
-                stats.Winrate = (stats.Wins * 100) / stats.Played
-            } else {
-                stats = &ChampionStats{
-                    Played: 1,
-                    Winrate: 1,
-                }
-
-                if bd.WinningTeam == 200 {
-                    stats.Wins = 1
-                    stats.Winrate = 100
-                } else {
-                    stats.Losses = 1
-                    stats.Winrate = 0
-                }
-
+            stats.addGame(100, bd.WinningTeam)
+        } else if bd.BottomRed == championName {
+            if stats, ok = championStats[bd.UtilityRed]; !ok {
+                stats = &ChampionStats{}
                 championStats[bd.UtilityRed] = stats
             }
-
+            stats.addGame(200, bd.WinningTeam)
         }
     }
 
     return championStats
+}
+
+
+func (bd *BotlaneData) isValid() bool {
+    return  bd.BottomBlue != "" &&
+            bd.BottomRed != "" &&
+            bd.UtilityBlue != "" &&
+            bd.UtilityRed != "" &&
+            (bd.WinningTeam == 100 || bd.WinningTeam == 200) &&
+            bd.MatchId != ""
+}
+
+
+func (cs *ChampionStats) addGame(playerTeam, winningTeam int) {
+    cs.Played++
+    if playerTeam == winningTeam {
+        cs.Wins++
+    } else {
+        cs.Losses++
+    }
+
+    cs.Winrate = (cs.Wins * 100) / cs.Played
 }
