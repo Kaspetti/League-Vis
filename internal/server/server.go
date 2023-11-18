@@ -23,14 +23,16 @@ func RunServer(ip, port string) {
 
     api := router.Group("/api") 
     {
-        api.GET("/champions/:champion/supports/ally", GetChampionSupportAlly)
+        api.GET("/champions/:champion/ally/support", GetAllySupport)
+        api.GET("/champions/:champion/opponent/adc", GetOpponentADC)
     }
 
     router.Static("/public", "./public")
+    router.StaticFile("/", "./public/index.html")
 
-    router.NoRoute(func(c *gin.Context) {
-        c.File("./public/index.html")
-    })
+    //router.NoRoute(func(c *gin.Context) {
+    //    c.File("./public/index.html")
+    //})
 
     router.Run(fmt.Sprintf("%s:%s", ip, port))
 }
