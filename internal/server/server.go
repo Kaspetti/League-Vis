@@ -28,9 +28,9 @@ func RunServer(ip, port string) {
 
     router.Static("/public", "./public")
 
-    router.NoRoute(func(c *gin.Context) {
-        c.File("./public/index.html")
-    })
+    //router.NoRoute(func(c *gin.Context) {
+    //    c.File("./public/index.html")
+    //})
 
     router.Run(fmt.Sprintf("%s:%s", ip, port))
 }

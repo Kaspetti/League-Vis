@@ -7,9 +7,12 @@
     </head>
     <body>
         <div style="text-align: center;">
-            <input type="text" id="champSearch" style="padding: 6px; margin: 5px;">
-            <br>
-            <button type="submit" onclick="searchChampion()">Search</button>
+            <form onsubmit="event.preventDefault(); searchChampion();">
+                <input type="text" id="champSearch" style="padding: 6px; margin: 5px;">
+                <br>
+                <button type="submit">Search</button>
+            </form>
+
             <div id="main" style="width: 100vw; height: 90vh; margin: auto;"></div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
