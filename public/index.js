@@ -11,7 +11,7 @@ function searchChampion(type) {
                 break;
         }
 
-        fetch("http://leaguevis.kaspeti.com/" + endpoint)
+        fetch(window.location.origin + "/" + endpoint)
             .then(response => {
                 if (!response.ok) {
                     throw new Error("API response was not OK: " + response.statusText);
