@@ -4,13 +4,22 @@
         <meta charset="UTF-8">
         <title>NexusGraphs</title>
         <link rel="stylesheet" href="/public/index.css">
+        <link rel="stylesheet" href="./index.css">
     </head>
     <body>
-        <div style="text-align: center;">
-            <input type="text" id="champSearch" style="padding: 6px; margin: 5px;">
-            <br>
-            <button type="button" onclick="searchChampion('allySupport')">Support Synergies</button>
-            <button type="button" onclick="searchChampion('opponentAdc')">ADC Counters</button>
+        <div id="container">
+            <div id="searchField">
+                <input type="text" id="champSearch">
+            </div>
+            <div>
+                <button class="roleButton topButton"></button>
+                <button class="roleButton jungleButton"></button>
+                <button class="roleButton midButton"></button>
+                <button class="roleButton bottomButton"></button>
+                <button class="roleButton supportButton"></button>
+            </div>
+            <!--<button type="button" onclick="searchChampion('allySupport')">Support Synergies</button>
+            <button type="button" onclick="searchChampion('opponentAdc')">ADC Counters</button>-->
 
             <div id="main" style="width: 100vw; height: 90vh; margin: auto;"></div>
         </div>
