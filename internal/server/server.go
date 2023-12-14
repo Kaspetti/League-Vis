@@ -30,6 +30,7 @@ func RunServer(ip, port string) {
 
     router.Static("/public", "./public")
     router.StaticFile("/", "./public/index.html")
+    router.StaticFile("/riot.txt", "riot.txt")
 
     //router.NoRoute(func(c *gin.Context) {
     //    c.File("./public/index.html")
